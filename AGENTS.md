@@ -1,3 +1,15 @@
+# Basta — guía para agentes
+
+Juego de palabras "Basta" para Android/iOS (Expo SDK 58, React Native, TypeScript, Expo Router). Textos en español de México.
+
+- Motor del juego: `src/lib/game.ts` (reducer puro; la aleatoriedad llega en las acciones). Pruebas en `src/lib/game.test.ts` con `npm test`.
+- Pantallas en `src/app/`, componentes en `src/components/`, estado persistente en `src/store/AppStore.tsx`.
+- Íconos: Font Awesome Free vía `src/components/Icon.tsx` (fuente en `assets/fonts`). Tipografía: Nunito (`fonts` en `src/lib/theme.ts`); usa `fontFamily: fonts.x`, no `fontWeight`.
+- Ramas: `main` (estable) y `dev` (desarrollo). Los PR van a `dev`.
+- Antes de terminar: `npm run typecheck && npm run lint && npm test`.
+
+---
+
 This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
 ## Expo has changed — do not trust your training data
