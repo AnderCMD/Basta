@@ -65,10 +65,15 @@ Para crear un estilo nuevo agrega una entrada a `PACKS` en el script y su descri
 ## Publicar una versión
 
 1. Cambia `version` en `package.json` y agrega la entrada en `CHANGELOG.md`.
-2. Fusiona `dev` → `main`.
-3. Crea y sube la etiqueta desde `main`:
+2. Abre un PR de `dev` → `main` y fusiónalo (`main` está protegida: no acepta push directo):
    ```bash
-   git tag vX.Y.Z && git push origin vX.Y.Z
+   gh pr create --base main --head dev --title "release: vX.Y.Z" --fill
+   gh pr merge --merge
+   ```
+3. Crea y sube la etiqueta sobre `main` actualizada:
+   ```bash
+   git checkout main && git pull
+   git tag -a vX.Y.Z -m "Basta vX.Y.Z" && git push origin vX.Y.Z
    ```
 4. El workflow **Release APK** (`.github/workflows/release.yml`) compila el APK en GitHub Actions y lo publica en *Releases* como `basta-vX.Y.Z.apk`, con las notas de `CHANGELOG.md`.
 

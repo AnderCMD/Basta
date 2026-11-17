@@ -9,7 +9,7 @@ Juego de palabras "Basta" para Android/iOS con un solo dispositivo al centro de 
 - Datos persistidos: `src/store/schema.ts` (validación + migraciones). Si cambias la forma de los datos, sube `SCHEMA_VERSION` y agrega migración + prueba.
 - Animaciones con Reanimated: usa `.get()/.set()` en valores compartidos dentro de handlers (reglas de React Compiler).
 - Versión: solo en `package.json` (la lee `app.config.ts`).
-- Ramas: `main` (estable) y `dev` (desarrollo). Los PR van a `dev`.
+- Ramas: `main` (estable, protegida: solo por PR `dev` → `main`, nunca push directo ni force-push) y `dev` (desarrollo). Los PR de cambios van a `dev`. Releases: ver `docs/BUILD.md`.
 - Antes de terminar: `npm run check`.
 
 ---
