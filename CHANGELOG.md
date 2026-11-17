@@ -2,6 +2,14 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.0.1] - 2026-11-16
+
+### Corregido
+- Ajustes: las tarjetas de estilo de sonido miden lo mismo en cualquier tamaño de pantalla.
+
+### Seguridad
+- `minimatch` ≥ 11.0.1 en `@expo/fingerprint` (aviso de Dependabot por denegación de servicio).
+
 ## [1.0.0] - 2026-11-16
 
 Primera versión pública. El APK está adjunto en la [release v1.0.0](https://github.com/AnderCMD/Basta/releases/tag/v1.0.0).
