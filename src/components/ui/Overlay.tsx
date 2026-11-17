@@ -1,13 +1,13 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import Animated, { FadeIn, FadeOut, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLayout } from '../../lib/responsive';
 import { colors } from '../../lib/theme';
 
 /**
  * Capa modal a pantalla completa dentro de una pantalla (pausa, resultados…).
- * Entra con fundido y el contenido con un "zoom" con resorte.
+ * Entra con un fundido suave, sin rebotes (evita mareos).
  */
 export function Overlay({ children, maxWidth = 560 }: { children: React.ReactNode; maxWidth?: number }) {
   const { s, width } = useLayout();
@@ -16,7 +16,7 @@ export function Overlay({ children, maxWidth = 560 }: { children: React.ReactNod
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll}>
           <Animated.View
-            entering={ZoomIn.springify().damping(14)}
+            entering={FadeIn.duration(220)}
             style={{ width: Math.min(width - 32, s(maxWidth)), alignSelf: 'center', gap: s(14), paddingVertical: s(20) }}
           >
             {children}

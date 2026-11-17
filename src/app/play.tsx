@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { Button, Card, Screen, SectionTitle } from '../components/ui';
 import { AppText } from '../components/ui/AppText';
 import { Icon } from '../components/Icon';
@@ -17,7 +17,7 @@ export default function PlayScreen() {
     <Screen title="¿Cómo jugamos?">
       <View style={[styles.list, grid && styles.grid]}>
         {MODES.map((m, i) => (
-          <Animated.View key={m.id} entering={FadeInDown.delay(i * 80).springify().damping(15)} style={grid ? styles.half : undefined}>
+          <Animated.View key={m.id} entering={FadeIn.delay(i * 40).duration(250)} style={grid ? styles.half : undefined}>
             <Button
               size="lg"
               alignStart
