@@ -4,8 +4,9 @@
 
 ## Flujo de ramas
 
-- `main` → estable. No se hace push directo.
-- `dev` → integración. Todas las ramas nuevas salen de aquí.
+- `main` → estable y **protegida**: solo recibe cambios por Pull Request (sin push directo ni force-push, aplica también a administradores). Cada PR recibe revisión automática de Copilot.
+- `dev` → integración (protegida contra borrado y force-push). Todas las ramas nuevas salen de aquí.
+- Las ramas de los PR se borran solas al fusionarse.
 
 ```bash
 git checkout dev
