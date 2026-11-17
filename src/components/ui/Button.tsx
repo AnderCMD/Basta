@@ -22,6 +22,9 @@ export type ButtonProps = {
   accessibilityHint?: string;
 };
 
+/** Altura mínima (en puntos, antes de escalar) de cada tamaño de botón. */
+const MIN_HEIGHT = { sm: 44, md: 64, lg: 92 } as const;
+
 /** Botón con degradado, ícono opcional y subtítulo. */
 export function Button({
   label,
@@ -37,7 +40,9 @@ export function Button({
 }: ButtonProps) {
   const { s } = useLayout();
   const colors = typeof tone === 'string' ? gradients[tone] : tone;
-  const pad = size === 'lg' ? s(20) : size === 'sm' ? s(10) : s(15);
+  // Alturas fijas por tamaño: botones con y sin subtítulo quedan parejos.
+  const minHeight = s(MIN_HEIGHT[size]);
+  const pad = size === 'lg' ? s(14) : size === 'sm' ? s(8) : s(10);
   const iconSize = s(size === 'lg' ? 30 : size === 'sm' ? 16 : 20);
 
   return (
@@ -56,6 +61,7 @@ export function Button({
           styles.btn,
           {
             paddingVertical: pad,
+            minHeight,
             paddingHorizontal: s(size === 'sm' ? 14 : 20),
             justifyContent: alignStart ? 'flex-start' : 'center',
             borderRadius: size === 'sm' ? radius.md : radius.lg,
@@ -68,11 +74,11 @@ export function Button({
           </View>
         ) : null}
         <View style={{ flexShrink: 1 }}>
-          <AppText variant={size === 'lg' ? 'h2' : size === 'sm' ? 'small' : 'h3'} weight={size === 'sm' ? 'bold' : undefined}>
+          <AppText variant={size === 'lg' ? 'h2' : size === 'sm' ? 'small' : 'h3'} weight={size === 'sm' ? 'bold' : undefined} numberOfLines={1}>
             {label}
           </AppText>
           {subtitle ? (
-            <AppText variant="small" color="rgba(255,255,255,0.88)">
+            <AppText variant="small" color="rgba(255,255,255,0.88)" numberOfLines={2}>
               {subtitle}
             </AppText>
           ) : null}

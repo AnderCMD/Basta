@@ -69,10 +69,10 @@ export function useGameController(setup: GameSetup) {
     if (state.status === 'playing' && seconds <= 3 && seconds > 0 && lastWarn.current !== seconds) {
       lastWarn.current = seconds;
       haptic.warn();
-      playSound('tick');
+      if (setup.settings.tickSound) playSound('tick');
     }
     if (seconds > 3) lastWarn.current = 0;
-  }, [seconds, state.status]);
+  }, [seconds, state.status, setup.settings.tickSound]);
 
   // Retroalimentación al cambiar de estado.
   const prevStatus = useRef(state.status);

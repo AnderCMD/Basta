@@ -7,6 +7,7 @@ import type { AvatarLook } from '../components/avatar/Avatar';
 import { ALL_PACK_IDS, CUSTOM_PACK_ID } from '../data/categories';
 import type { GameMode, Modifiers } from '../features/game/engine';
 import { emptyCareer, type CareerStats } from '../features/stats/achievements';
+import type { SoundPackId, SoundVolume } from '../lib/sound';
 
 export const SCHEMA_VERSION = 2;
 export const STORAGE_KEY = 'basta.state.v2';
@@ -34,6 +35,11 @@ export type Settings = {
   customCategories: string[];
   haptics: boolean;
   sound: boolean;
+  /** Estilo de los efectos de sonido. */
+  soundPack: SoundPackId;
+  soundVolume: SoundVolume;
+  /** Tic-tac en los últimos 3 segundos. */
+  tickSound: boolean;
 };
 
 export type GameSummary = {
@@ -73,7 +79,14 @@ export const DEFAULT_SETTINGS: Settings = {
   customCategories: [],
   haptics: true,
   sound: true,
+  soundPack: 'clasico',
+  soundVolume: 'medio',
+  tickSound: true,
 };
+
+export const SOUND_PACK_IDS: readonly SoundPackId[] = ['clasico', 'suave', 'burbujas', 'madera', 'campanitas', 'minimo'];
+const SOUND_VOLUME_IDS: readonly SoundVolume[] = ['bajo', 'medio', 'alto'];
+const oneOfStr = <T extends string>(v: unknown, options: readonly T[], fallback: T): T => (options.includes(v as T) ? (v as T) : fallback);
 
 export const emptyState = (): PersistedState => ({ version: SCHEMA_VERSION, players: [], settings: DEFAULT_SETTINGS, history: [] });
 
@@ -141,6 +154,9 @@ export function sanitizeSettings(v: unknown): Settings {
     customCategories: strList(o.customCategories).map((c) => c.trim()).filter(Boolean).slice(0, 500),
     haptics: bool(o.haptics, d.haptics),
     sound: bool(o.sound, d.sound),
+    soundPack: oneOfStr(o.soundPack, SOUND_PACK_IDS, d.soundPack),
+    soundVolume: oneOfStr(o.soundVolume, SOUND_VOLUME_IDS, d.soundVolume),
+    tickSound: bool(o.tickSound, d.tickSound),
   };
 }
 

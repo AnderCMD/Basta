@@ -44,7 +44,7 @@
 | 🔤 **Abecedario de México** | 27 letras con Ñ, opción CH y LL, o sin letras difíciles. |
 | 📱 **Responsivo** | Teléfono y tableta, vertical u horizontal, con distribuciones específicas para cada caso. |
 | 🎨 **Animaciones** | Reanimated 4: fichas con resorte, reloj animado, confeti, temblor al fallar, "+puntos" flotantes. |
-| 🔊 **Sonidos y vibración** | Efectos sintetizados (sin archivos de terceros) y háptica; ambos se pueden apagar. |
+| 🔊 **Sonidos y vibración** | 6 estilos de sonido sintetizados (Clásico, Suave, Burbujas, Madera, Campanitas, Mínimo), volumen y tic-tac opcional; vibración configurable. |
 | 🔒 **Privado** | Sin internet, sin cuentas, sin anuncios. Todo se guarda en el dispositivo. |
 
 ## Empezar
@@ -62,7 +62,11 @@ Escanea el QR con Expo Go. También: `npm run android`, `npm run ios` o `npm run
 
 > **Nota:** Expo Go puede no incluir todos los módulos nativos de la versión más reciente. Si algo falla, usa una *development build*: `npx expo run:android` / `npx expo run:ios`.
 
-## Generar el APK (sin publicar en tiendas)
+## Descargar el APK
+
+Descarga el `.apk` de la [última versión](https://github.com/AnderCMD/Basta/releases/latest) e instálalo en tu Android (permite "instalar apps de origen desconocido").
+
+## Generar el APK tú mismo
 
 ```bash
 npx eas-cli@latest build --platform android --profile preview   # .apk listo para instalar
@@ -79,7 +83,7 @@ O localmente: `npx expo prebuild && cd android && ./gradlew assembleRelease`. De
 | `npm run typecheck` | Revisión de tipos con TypeScript |
 | `npm run lint` | ESLint con reglas de Expo y React Compiler |
 | `npm run check` | Las tres anteriores juntas |
-| `npm run sounds` | Regenera los efectos de sonido |
+| `npm run sounds` | Regenera los 6 estilos de sonido y `src/lib/soundPacks.ts` |
 | `npm run brand` | Regenera logo, banner y social preview (con el servidor web corriendo) |
 
 ## Documentación

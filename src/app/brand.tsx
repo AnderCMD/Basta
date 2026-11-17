@@ -2,7 +2,7 @@ import { Redirect, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Avatar, type AvatarLook } from '../components/avatar';
+import { ANIMAL_IDS, Avatar, EXTRAS, GLASSES, HATS, type AvatarLook } from '../components/avatar';
 import { Icon, type IconName } from '../components/Icon';
 import { Logo } from '../components/Logo';
 import { AppText } from '../components/ui/AppText';
@@ -75,8 +75,44 @@ function Features({ size = 22 }: { size?: number }) {
 }
 
 export default function Brand() {
-  const { kind = 'social' } = useLocalSearchParams<{ kind?: string }>();
+  const { kind = 'social', from = '0', big } = useLocalSearchParams<{ kind?: string; from?: string; big?: string }>();
   if (!__DEV__) return <Redirect href="/" />;
+
+  if (kind === 'avatars') {
+    // Hoja de revisión: cada animal sin accesorios y con cada sombrero, lentes y extra.
+    const rows: { label: string; looks: AvatarLook[] }[] = [
+      { label: 'Base', looks: ANIMAL_IDS.map((a) => ({ animal: a, hat: null, glasses: null, extra: null, bg: null })) },
+      ...HATS.map((h) => ({ label: h.name, looks: ANIMAL_IDS.map((a) => ({ animal: a, hat: h.id, glasses: null, extra: null, bg: null })) })),
+      ...GLASSES.map((g) => ({ label: g.name, looks: ANIMAL_IDS.map((a) => ({ animal: a, hat: null, glasses: g.id, extra: null, bg: null })) })),
+      ...EXTRAS.map((e) => ({ label: e.name, looks: ANIMAL_IDS.map((a) => ({ animal: a, hat: null, glasses: null, extra: e.id, bg: null })) })),
+    ];
+    const start = Number(from) || 0;
+    if (big) {
+      // Vista grande de una fila: 8 avatares por renglón.
+      const row = rows[start];
+      return (
+        <View style={{ flex: 1, backgroundColor: colors.bgTop, padding: 10, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+          {row.looks.map((l, i) => (
+            <Avatar key={i} look={l} size={156} ring={colors.yellow} />
+          ))}
+        </View>
+      );
+    }
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.bgTop, padding: 8, gap: 4 }}>
+        {rows.slice(start, start + 10).map((r) => (
+          <View key={r.label} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <AppText size={11} style={{ width: 90 }} allowFontScaling={false}>
+              {r.label}
+            </AppText>
+            {r.looks.map((l, i) => (
+              <Avatar key={i} look={l} size={104} ring={colors.yellow} />
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  }
 
   if (kind === 'logo') {
     return (

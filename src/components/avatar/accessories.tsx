@@ -434,13 +434,19 @@ export const EXTRAS = [
   {
     id: 'audifonos',
     name: 'Audífonos',
-    draw: (a) => (
-      <G>
-        <Path d={`M19 ${a.eyeY + 4} Q18 ${a.top - 6} 50 ${a.top - 6} Q82 ${a.top - 6} 81 ${a.eyeY + 4}`} stroke="#2B2840" strokeWidth={5} fill="none" strokeLinecap="round" />
-        <Rect x={12} y={a.eyeY - 2} width={12} height={18} rx={5} fill="#FF4D8D" />
-        <Rect x={76} y={a.eyeY - 2} width={12} height={18} rx={5} fill="#FF4D8D" />
-      </G>
-    ),
+    draw: (a) => {
+      // Las copas se pegan a los lados de la cabeza según su anchura.
+      const L = 50 - a.headHalf;
+      const R = 50 + a.headHalf;
+      const y = a.eyeY - 2;
+      return (
+        <G>
+          <Path d={`M${L + 2} ${y + 2} Q${L} ${a.top - 8} 50 ${a.top - 8} Q${R} ${a.top - 8} ${R - 2} ${y + 2}`} stroke="#2B2840" strokeWidth={5} fill="none" strokeLinecap="round" />
+          <Rect x={L - 6} y={y} width={12} height={18} rx={5} fill="#FF4D8D" />
+          <Rect x={R - 6} y={y} width={12} height={18} rx={5} fill="#FF4D8D" />
+        </G>
+      );
+    },
   },
   {
     id: 'collar',

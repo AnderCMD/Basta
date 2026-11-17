@@ -96,7 +96,7 @@ export function PauseMenu({ state, onResume, onMistake, onKick, onUndo, onChange
       <AppText variant="h1" align="center">
         Pausa
       </AppText>
-      <Button icon="play" label="Continuar" tone="success" size="lg" onPress={onResume} />
+      <Button icon="play" label="Continuar" tone="success" onPress={onResume} />
       <Button icon="gavel" label="Alguien se equivocó" subtitle="Quitar vida, puntos o sacarlo" tone="danger" onPress={() => setJudge('mistake')} />
       {canUndo(state) ? (
         <Button
@@ -173,7 +173,6 @@ export function FailOverlay({ state, onNext, onUndo }: { state: GS; onNext: () =
       ) : null}
       <Button
         icon="play"
-        size="lg"
         label={nextLabel}
         subtitle={mode === 'classic' ? `Sigue la categoría: ${state.category}` : 'Nueva categoría y letras frescas'}
         tone="success"
@@ -295,7 +294,7 @@ export function ResultsOverlay({ state, newAchievements, onRematch, onMenu, onUn
           </>
         ) : null}
 
-        <Button icon="repeat" size="lg" label="Revancha" subtitle="Mismos jugadores y reglas" tone="gold" onPress={onRematch} />
+        <Button icon="repeat" label="Revancha" subtitle="Mismos jugadores y reglas" tone="gold" onPress={onRematch} />
         <Button icon="home" label="Menú principal" tone="secondary" onPress={onMenu} />
         {onUndo ? <Button icon="undo" label="Fue un error, deshacer" tone="neutral" onPress={onUndo} /> : null}
       </Overlay>

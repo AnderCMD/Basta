@@ -35,7 +35,7 @@ Las carpetas `android/` e `ios/` se generan (Continuous Native Generation) y est
 | Solo `arm64-v8a` y `armeabi-v7a` | `buildArchs` | Sin librerías x86 de emuladores Intel (APK mucho más chico) |
 | Hermes | Por defecto en Expo | Bytecode precompilado: arranque más rápido |
 | Fuentes recortadas | `scripts/subset-fonts.sh` | SF Pro Rounded de 2.3 MB → ~41 KB por peso; FA Brands → 1 KB |
-| Sonidos sintetizados | `scripts/generate-sounds.mjs` | 8 efectos WAV mono de 2–38 KB |
+| Sonidos sintetizados | `scripts/generate-sounds.mjs` | 6 estilos × 8 efectos WAV mono (≈ 670 KB en total) |
 | Sin permisos extra | `blockedPermissions` + `expo-audio` sin micrófono | Sin `RECORD_AUDIO` |
 | SVG en vez de imágenes | Avatares, accesorios e íconos | Cero PNG para personajes |
 
@@ -57,5 +57,19 @@ SF_DIR="/ruta/a/San Francisco Pro Rounded Fonts" ./scripts/subset-fonts.sh
 ## Sonidos
 
 ```bash
-npm run sounds   # regenera assets/sounds/*.wav
+npm run sounds   # regenera assets/sounds/<estilo>/*.wav y src/lib/soundPacks.ts
 ```
+
+Para crear un estilo nuevo agrega una entrada a `PACKS` en el script y su descripción en `SOUND_PACKS` (`src/lib/sound.ts`) y en `SOUND_PACK_IDS` (`src/store/schema.ts`).
+
+## Publicar una versión
+
+1. Cambia `version` en `package.json` y agrega la entrada en `CHANGELOG.md`.
+2. Fusiona `dev` → `main`.
+3. Crea y sube la etiqueta desde `main`:
+   ```bash
+   git tag vX.Y.Z && git push origin vX.Y.Z
+   ```
+4. El workflow **Release APK** (`.github/workflows/release.yml`) compila el APK en GitHub Actions y lo publica en *Releases* como `basta-vX.Y.Z.apk`, con las notas de `CHANGELOG.md`.
+
+> El APK se firma con la llave de depuración que genera `expo prebuild`: sirve para instalarlo directo, no para Play Store. Para Play Store usa `eas build --profile production` con tu propia llave.

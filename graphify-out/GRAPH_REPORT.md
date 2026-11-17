@@ -1,12 +1,18 @@
-# Graph Report - .  (2026-11-16)
+# Graph Report - Basta  (2026-11-16)
 
 ## Corpus Check
-- Corpus is ~37,792 words - fits in a single context window. You may not need a graph.
+- 82 files · ~40,372 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 550 nodes · 1344 edges · 23 communities (19 shown, 4 thin omitted)
+- 569 nodes · 1391 edges · 23 communities (19 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 32 edges (avg confidence: 0.84)
-- Token cost: 107,692 input · 0 output
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `4fb1ae73`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Pantallas y marca
@@ -40,7 +46,7 @@
 4. `README` - 21 edges
 5. `useAppStore()` - 20 edges
 6. `Release 2.0.0` - 20 edges
-7. `Icon()` - 18 edges
+7. `Icon()` - 19 edges
 8. `AGENTS.md Agent Guide` - 16 edges
 9. `gameReducer()` - 15 edges
 10. `AvatarLook` - 13 edges
@@ -68,20 +74,20 @@
 ## Communities (23 total, 4 thin omitted)
 
 ### Community 0 - "Pantallas y marca"
-Cohesion: 0.05
-Nodes (84): CAST, FEATURES, Parade(), styles, styles, Sort, SORTS, styles (+76 more)
+Cohesion: 0.06
+Nodes (86): CategoriesScreen(), styles, Game(), HallOfFame(), metric(), Sort, SORTS, styles (+78 more)
 
 ### Community 1 - "Alfabeto, premios y motor"
 Cohesion: 0.08
-Nodes (45): AlphabetOptions, DIGRAPHS, HARD_LETTERS, isHardLetter(), letterValue(), MEDIUM_LETTERS, MX_ALPHABET, best() (+37 more)
+Nodes (42): AlphabetOptions, DIGRAPHS, HARD_LETTERS, isHardLetter(), letterValue(), MEDIUM_LETTERS, MX_ALPHABET, best() (+34 more)
 
 ### Community 2 - "Dependencias Expo"
 Cohesion: 0.04
-Nodes (45): expo, expo-audio, expo-build-properties, expo-constants, expo-font, expo-haptics, expo-keep-awake, expo-linear-gradient (+37 more)
+Nodes (47): expo, expo-asset, expo-audio, expo-build-properties, expo-constants, expo-font, expo-haptics, expo-keep-awake (+39 more)
 
 ### Community 3 - "Estado y logros"
-Cohesion: 0.11
-Nodes (36): GameMode, Achievement, CareerStats, emptyCareer(), Tier, TIER_COLORS, newId(), AppStoreProvider() (+28 more)
+Cohesion: 0.10
+Nodes (39): Achievement, CareerStats, emptyCareer(), Tier, TIER_COLORS, unlockedIds(), applyGameToCareers(), newId() (+31 more)
 
 ### Community 4 - "Config y package.json"
 Cohesion: 0.05
@@ -89,15 +95,15 @@ Nodes (36): [major, minor, patch], eslint, eslint-config-expo, description, devD
 
 ### Community 5 - "Preparar partida y categorías"
 Cohesion: 0.09
-Nodes (31): Game(), SettingsScreen(), SetupScreen(), buildAlphabet(), ANIMAL_TRAITS, COLORS, CONTAINERS, EVENTS (+23 more)
+Nodes (29): SetupScreen(), IconName, buildAlphabet(), ANIMAL_TRAITS, COLORS, CONTAINERS, EVENTS, FOOD_TRAITS (+21 more)
 
 ### Community 6 - "Menú y editor de avatares"
-Cohesion: 0.11
-Nodes (25): CategoriesScreen(), HallOfFame(), metric(), Home(), styles, EditPlayerScreen(), Accessory, AVATAR_BACKGROUNDS (+17 more)
+Cohesion: 0.07
+Nodes (29): Accessory, AVATAR_BACKGROUNDS, ExtraId, findExtra(), findGlasses(), findHat(), GlassesId, HatId (+21 more)
 
 ### Community 7 - "Pantalla de juego y overlays"
 Cohesion: 0.09
-Nodes (24): GameScreen(), styles, Confetti(), Piece, seeded(), FailOverlay(), GS, MEDAL_COLORS (+16 more)
+Nodes (23): GameScreen(), styles, Confetti(), Piece, seeded(), FailOverlay(), GS, MEDAL_COLORS (+15 more)
 
 ### Community 8 - "Flujo de calidad y CI"
 Cohesion: 0.15
@@ -112,12 +118,12 @@ Cohesion: 0.17
 Nodes (17): EAS (build, submit, update), Icon component (Font Awesome Free 7, no emojis), Theme tokens (lib/theme.ts), Branding Doc, Brand color palette, Social preview image, Build and Optimization Doc, APK optimizations (R8, shrink, ARM-only, Hermes, PNG crunch) (+9 more)
 
 ### Community 11 - "Raíz: fuentes y sonido"
-Cohesion: 0.20
-Nodes (10): FeedbackSync(), FONT_FILES, RootLayout(), ICON_FONTS, setHapticsEnabled(), initSounds(), players, setSoundEnabled() (+2 more)
+Cohesion: 0.13
+Nodes (22): FeedbackSync(), FONT_FILES, RootLayout(), SettingsScreen(), styles, ICON_FONTS, confirmAction(), setHapticsEnabled() (+14 more)
 
 ### Community 12 - "Tablero y reloj"
 Cohesion: 0.18
-Nodes (10): Board(), Props, styles, LetterTile(), AnimatedCircle, Props, styles, TimerCore() (+2 more)
+Nodes (8): CAST, FEATURES, Parade(), styles, LETTERS, Logo(), styles, tileGradients
 
 ### Community 13 - "Persistencia y versiones"
 Cohesion: 0.20
@@ -128,8 +134,8 @@ Cohesion: 0.31
 Nodes (10): Avatars Doc, Avatar anchors (top, eyeY, eyeDX, mouthY, chinY), ANIMALS (16 SVG animals), AVATAR_BACKGROUNDS (12), Avatar component (memoized), Avatar draw order (bg, animal, extra, glasses, hat, ring), EXTRAS (8), GLASSES (8) (+2 more)
 
 ### Community 15 - "Sonidos sintetizados"
-Cohesion: 0.25
-Nodes (4): note(), OUT, sounds, tone()
+Cohesion: 0.17
+Nodes (7): EFFECTS, lines, n(), OUT, PACKS, ROOT, tone()
 
 ### Community 16 - "Paquetes de categorías"
 Cohesion: 0.43
@@ -140,11 +146,11 @@ Cohesion: 0.33
 Nodes (6): Pure game engine reducer (engine.ts), Game state machine (ready -> playing <-> paused -> fail -> finished), Letter tiles (6 visible, unique id, golden flag), Undo history (up to 10 snapshots), useGameController (engine + clock, sound, haptics), Judges pause menu (fail, kick, undo, change category)
 
 ### Community 18 - "TypeScript config"
-Cohesion: 0.33
-Nodes (5): expo/tsconfig.base, compilerOptions, allowImportingTsExtensions, strict, extends
+Cohesion: 0.40
+Nodes (4): expo/tsconfig.base, compilerOptions, strict, extends
 
 ## Knowledge Gaps
-- **154 isolated node(s):** `[major, minor, patch]`, `{ defineConfig }`, `expoConfig`, `name`, `version` (+149 more)
+- **161 isolated node(s):** `[major, minor, patch]`, `{ defineConfig }`, `expoConfig`, `name`, `version` (+156 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -152,16 +158,16 @@ Nodes (5): expo/tsconfig.base, compilerOptions, allowImportingTsExtensions, stri
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `Dependencias Expo` to `Config y package.json`?**
-  _High betweenness centrality (0.120) - this node is a cross-community bridge._
+  _High betweenness centrality (0.122) - this node is a cross-community bridge._
 - **What connects `[major, minor, patch]`, `{ defineConfig }`, `expoConfig` to the rest of the system?**
-  _154 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _161 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Pantallas y marca` be split into smaller, more focused modules?**
-  _Cohesion score 0.05227175616009116 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.055270920664493094 - nodes in this community are weakly interconnected._
 - **Should `Alfabeto, premios y motor` be split into smaller, more focused modules?**
-  _Cohesion score 0.07542087542087542 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07993966817496229 - nodes in this community are weakly interconnected._
 - **Should `Dependencias Expo` be split into smaller, more focused modules?**
-  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
 - **Should `Estado y logros` be split into smaller, more focused modules?**
-  _Cohesion score 0.10685249709639953 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09797979797979799 - nodes in this community are weakly interconnected._
 - **Should `Config y package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.05128205128205128 - nodes in this community are weakly interconnected._

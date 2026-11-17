@@ -67,21 +67,23 @@ export type Anchors = {
   mouthY: number;
   /** Barbilla (donde van moños y bufandas). */
   chinY: number;
+  /** Media anchura de la cabeza (audífonos y cosas a los lados). */
+  headHalf: number;
 };
 
 export type AnimalDef = { name: string; bg: string; anchors: Anchors; draw: () => React.ReactElement };
 
 export const ANIMALS: Record<AnimalId, AnimalDef> = {
   gato: {
-    anchors: { eyeY: 53, eyeDX: 11, top: 25, mouthY: 67, chinY: 87 },
+    anchors: { eyeY: 53, eyeDX: 11, top: 25, mouthY: 67, chinY: 87 , headHalf: 31 },
     name: 'Gato',
     bg: '#FFE0C2',
     draw: () => (
       <G>
-        <Polygon points="20,44 26,12 46,30" fill="#F4A259" />
-        <Polygon points="80,44 74,12 54,30" fill="#F4A259" />
-        <Polygon points="25,38 28,20 39,30" fill="#FFB5A7" />
-        <Polygon points="75,38 72,20 61,30" fill="#FFB5A7" />
+        <Polygon points="24,48 25,12 48,32" fill="#F4A259" />
+        <Polygon points="76,48 75,12 52,32" fill="#F4A259" />
+        <Polygon points="28,38 28,20 40,31" fill="#FFB5A7" />
+        <Polygon points="72,38 72,20 60,31" fill="#FFB5A7" />
         <Circle cx={50} cy={56} r={31} fill="#F4A259" />
         <Path d="M42 27 L44 37 M50 25 L50 36 M58 27 L56 37" stroke="#D97B2B" strokeWidth={3} strokeLinecap="round" />
         <Ellipse cx={50} cy={66} rx={14} ry={10} fill="#FFE8D1" />
@@ -93,7 +95,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   perro: {
-    anchors: { eyeY: 48, eyeDX: 11, top: 24, mouthY: 67, chinY: 84 },
+    anchors: { eyeY: 48, eyeDX: 11, top: 24, mouthY: 67, chinY: 84 , headHalf: 30 },
     name: 'Perro',
     bg: '#D6F0FF',
     draw: () => (
@@ -111,7 +113,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   zorro: {
-    anchors: { eyeY: 50, eyeDX: 13, top: 30, mouthY: 73, chinY: 86 },
+    anchors: { eyeY: 50, eyeDX: 13, top: 30, mouthY: 73, chinY: 86 , headHalf: 33 },
     name: 'Zorro',
     bg: '#FFF1C9',
     draw: () => (
@@ -129,7 +131,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   panda: {
-    anchors: { eyeY: 51, eyeDX: 12, top: 23, mouthY: 69, chinY: 87 },
+    anchors: { eyeY: 51, eyeDX: 12, top: 23, mouthY: 69, chinY: 87 , headHalf: 32 },
     name: 'Panda',
     bg: '#D9F7E8',
     draw: () => (
@@ -150,7 +152,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   leon: {
-    anchors: { eyeY: 50, eyeDX: 10, top: 20, mouthY: 66, chinY: 84 },
+    anchors: { eyeY: 50, eyeDX: 10, top: 20, mouthY: 66, chinY: 84 , headHalf: 30 },
     name: 'León',
     bg: '#FFE7A3',
     draw: () => (
@@ -171,7 +173,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   rana: {
-    anchors: { eyeY: 35, eyeDX: 19, top: 22, mouthY: 70, chinY: 88 },
+    anchors: { eyeY: 35, eyeDX: 19, top: 22, mouthY: 70, chinY: 88 , headHalf: 36 },
     name: 'Rana',
     bg: '#E2F9C9',
     draw: () => (
@@ -193,13 +195,13 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   buho: {
-    anchors: { eyeY: 46, eyeDX: 14, top: 22, mouthY: 60, chinY: 88 },
+    anchors: { eyeY: 46, eyeDX: 14, top: 22, mouthY: 60, chinY: 88 , headHalf: 33 },
     name: 'Búho',
     bg: '#E8DDFF',
     draw: () => (
       <G>
-        <Polygon points="20,30 26,12 40,26" fill="#7B5236" />
-        <Polygon points="80,30 74,12 60,26" fill="#7B5236" />
+        <Polygon points="22,44 22,12 44,30" fill="#7B5236" />
+        <Polygon points="78,44 78,12 56,30" fill="#7B5236" />
         <Ellipse cx={50} cy={56} rx={33} ry={32} fill="#9C6B47" />
         <Ellipse cx={50} cy={70} rx={20} ry={16} fill="#E8C9A0" />
         <Path d="M42 66 Q45 70 48 66 M52 72 Q55 76 58 72 M42 76 Q45 80 48 76" stroke="#C49A6C" strokeWidth={2} fill="none" strokeLinecap="round" />
@@ -216,13 +218,13 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   cerdo: {
-    anchors: { eyeY: 48, eyeDX: 12, top: 25, mouthY: 76, chinY: 87 },
+    anchors: { eyeY: 48, eyeDX: 12, top: 25, mouthY: 76, chinY: 87 , headHalf: 31 },
     name: 'Cerdo',
     bg: '#FFE3EC',
     draw: () => (
       <G>
-        <Polygon points="20,40 22,14 42,28" fill="#F48FA6" />
-        <Polygon points="80,40 78,14 58,28" fill="#F48FA6" />
+        <Polygon points="26,46 22,14 46,32" fill="#F48FA6" />
+        <Polygon points="74,46 78,14 54,32" fill="#F48FA6" />
         <Circle cx={50} cy={56} r={31} fill="#F7A8B8" />
         <Eyes y={48} dx={12} />
         <Ellipse cx={50} cy={63} rx={14} ry={10} fill="#F48FA6" />
@@ -234,7 +236,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   oso: {
-    anchors: { eyeY: 49, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 },
+    anchors: { eyeY: 49, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 , headHalf: 31 },
     name: 'Oso',
     bg: '#FFE8D6',
     draw: () => (
@@ -253,7 +255,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   conejo: {
-    anchors: { eyeY: 56, eyeDX: 11, top: 30, mouthY: 72, chinY: 88 },
+    anchors: { eyeY: 56, eyeDX: 11, top: 30, mouthY: 72, chinY: 88 , headHalf: 28 },
     name: 'Conejo',
     bg: '#DFF3FF',
     draw: () => (
@@ -272,7 +274,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   koala: {
-    anchors: { eyeY: 50, eyeDX: 12, top: 27, mouthY: 76, chinY: 85 },
+    anchors: { eyeY: 50, eyeDX: 12, top: 27, mouthY: 76, chinY: 85 , headHalf: 29 },
     name: 'Koala',
     bg: '#E3F6F1',
     draw: () => (
@@ -290,7 +292,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   tigre: {
-    anchors: { eyeY: 50, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 },
+    anchors: { eyeY: 50, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 , headHalf: 31 },
     name: 'Tigre',
     bg: '#FFF0D1',
     draw: () => (
@@ -309,7 +311,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   mono: {
-    anchors: { eyeY: 48, eyeDX: 10, top: 21, mouthY: 69, chinY: 83 },
+    anchors: { eyeY: 48, eyeDX: 10, top: 21, mouthY: 69, chinY: 83 , headHalf: 31 },
     name: 'Mono',
     bg: '#FFE2CF',
     draw: () => (
@@ -330,7 +332,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   pinguino: {
-    anchors: { eyeY: 52, eyeDX: 11, top: 22, mouthY: 64, chinY: 88 },
+    anchors: { eyeY: 52, eyeDX: 11, top: 22, mouthY: 64, chinY: 88 , headHalf: 33 },
     name: 'Pingüino',
     bg: '#D4ECFF',
     draw: () => (
@@ -344,12 +346,12 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   pollito: {
-    anchors: { eyeY: 50, eyeDX: 11, top: 25, mouthY: 63, chinY: 87 },
+    anchors: { eyeY: 50, eyeDX: 11, top: 25, mouthY: 63, chinY: 87 , headHalf: 31 },
     name: 'Pollito',
     bg: '#FFF7D1',
     draw: () => (
       <G>
-        <Path d="M48 24 Q44 12 52 14 Q50 18 56 16 Q58 22 52 26 Z" fill="#FFB703" />
+        <Path d="M47 30 Q43 14 52 15 Q50 19 57 17 Q59 25 53 30 Z" fill="#FFB703" />
         <Circle cx={50} cy={56} r={31} fill="#FFD23F" />
         <Ellipse cx={22} cy={64} rx={7} ry={11} fill="#FFC300" transform="rotate(25 22 64)" />
         <Ellipse cx={78} cy={64} rx={7} ry={11} fill="#FFC300" transform="rotate(-25 78 64)" />
@@ -361,22 +363,27 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   ajolote: {
-    anchors: { eyeY: 50, eyeDX: 15, top: 30, mouthY: 66, chinY: 82 },
+    anchors: { eyeY: 50, eyeDX: 15, top: 30, mouthY: 66, chinY: 82 , headHalf: 30 },
     name: 'Ajolote',
     bg: '#FFE0EF',
     draw: () => (
       <G>
-        {[-1, 1].map((s) =>
-          [26, 40, 54].map((y, i) => (
-            <G key={`${s}-${y}`}>
+        {/* Branquias: nacen dentro de la cabeza (que se dibuja encima) y se abren hacia afuera. */}
+        {[-1, 1].map((side) =>
+          [
+            { from: [22, 44], ctrl: [36, 30], to: [42, 24] },
+            { from: [26, 52], ctrl: [40, 44], to: [46, 40] },
+            { from: [25, 62], ctrl: [38, 62], to: [45, 56] },
+          ].map((g, i) => (
+            <G key={`${side}-${i}`}>
               <Path
-                d={`M${50 + s * 26} ${y + 6} Q${50 + s * (36 + i * 2)} ${y - 2} ${50 + s * (44 - i)} ${y - 6 + i * 6}`}
+                d={`M${50 + side * g.from[0]} ${g.from[1]} Q${50 + side * g.ctrl[0]} ${g.ctrl[1]} ${50 + side * g.to[0]} ${g.to[1]}`}
                 stroke="#E0569B"
                 strokeWidth={6}
                 strokeLinecap="round"
                 fill="none"
               />
-              <Circle cx={50 + s * (44 - i)} cy={y - 6 + i * 6} r={3.4} fill="#FF7FB8" />
+              <Circle cx={50 + side * g.to[0]} cy={g.to[1]} r={3.6} fill="#FF7FB8" />
             </G>
           )),
         )}

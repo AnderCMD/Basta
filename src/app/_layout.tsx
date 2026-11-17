@@ -7,7 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ICON_FONTS } from '../components/Icon';
 import { AppText, Button } from '../components/ui';
 import { setHapticsEnabled } from '../lib/haptics';
-import { initSounds, setSoundEnabled } from '../lib/sound';
+import { initSounds, setSoundEnabled, setSoundPack, setSoundVolume } from '../lib/sound';
 import { colors, fonts } from '../lib/theme';
 import { AppStoreProvider, useAppStore } from '../store/AppStore';
 
@@ -29,6 +29,8 @@ function FeedbackSync() {
   const { settings } = useAppStore();
   useEffect(() => setHapticsEnabled(settings.haptics), [settings.haptics]);
   useEffect(() => setSoundEnabled(settings.sound), [settings.sound]);
+  useEffect(() => setSoundPack(settings.soundPack), [settings.soundPack]);
+  useEffect(() => setSoundVolume(settings.soundVolume), [settings.soundVolume]);
   return null;
 }
 

@@ -28,3 +28,13 @@ test('paquetes desconocidos se descartan', () => {
   const s = sanitizeState({ settings: { enabledPacks: ['clasicas', 'no-existe', 'custom'] } });
   assert.deepEqual(s.settings.enabledPacks, ['clasicas', 'custom']);
 });
+
+test('el estilo y volumen de sonido se validan', () => {
+  const ok = sanitizeState({ settings: { soundPack: 'madera', soundVolume: 'bajo', tickSound: false } });
+  assert.equal(ok.settings.soundPack, 'madera');
+  assert.equal(ok.settings.soundVolume, 'bajo');
+  assert.equal(ok.settings.tickSound, false);
+  const bad = sanitizeState({ settings: { soundPack: 'heavy-metal', soundVolume: 11 } });
+  assert.equal(bad.settings.soundPack, DEFAULT_SETTINGS.soundPack);
+  assert.equal(bad.settings.soundVolume, DEFAULT_SETTINGS.soundVolume);
+});

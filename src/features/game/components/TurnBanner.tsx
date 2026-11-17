@@ -9,6 +9,9 @@ import { useLayout } from '../../../lib/responsive';
 import { colors, radius } from '../../../lib/theme';
 import { currentMember, type GameState } from '../engine';
 
+/** Todos los botones redondos del banner miden lo mismo. */
+const BANNER_BUTTON = 38;
+
 type Props = {
   state: GameState<AvatarLook>;
   onPause: () => void;
@@ -34,8 +37,8 @@ export function TurnBanner({ state, onPause, onWildcard, compact, column }: Prop
   const wildcardButtons =
     state.config.wildcards > 0 ? (
       <View style={styles.wildcards}>
-        <IconButton icon="forward" label="Comodín: pasar turno" size={34} background="rgba(61,165,255,0.35)" disabled={!canAct || competitor.wildcards <= 0} onPress={() => onWildcard('pass')} />
-        <IconButton icon="hourglass" label="Comodín: más tiempo" size={34} background="rgba(46,230,166,0.35)" disabled={!canAct || competitor.wildcards <= 0} onPress={() => onWildcard('time')} />
+        <IconButton icon="forward" label="Comodín: pasar turno" size={BANNER_BUTTON} background="rgba(61,165,255,0.35)" disabled={!canAct || competitor.wildcards <= 0} onPress={() => onWildcard('pass')} />
+        <IconButton icon="hourglass" label="Comodín: más tiempo" size={BANNER_BUTTON} background="rgba(46,230,166,0.35)" disabled={!canAct || competitor.wildcards <= 0} onPress={() => onWildcard('time')} />
         <AppText variant="caption" weight="black" color={colors.textDim}>
           ×{competitor.wildcards}
         </AppText>
@@ -50,7 +53,7 @@ export function TurnBanner({ state, onPause, onWildcard, compact, column }: Prop
           <AppText weight="black" size={26} color={danger ? colors.red : colors.text} style={{ flex: 1, textAlign: 'right' }}>
             {Math.ceil(state.timeLeft / 1000)}
           </AppText>
-          <IconButton icon="pause" label="Pausa" size={36} onPress={onPause} disabled={!canAct} />
+          <IconButton icon="pause" label="Pausa" size={BANNER_BUTTON} onPress={onPause} disabled={!canAct} />
         </View>
         <AppText variant="h3" numberOfLines={1}>
           {member.name}
@@ -101,7 +104,7 @@ export function TurnBanner({ state, onPause, onWildcard, compact, column }: Prop
         <AppText weight="black" size={compact ? 26 : 30} color={danger ? colors.red : colors.text} style={{ minWidth: s(34), textAlign: 'center' }}>
           {Math.ceil(state.timeLeft / 1000)}
         </AppText>
-        <IconButton icon="pause" label="Pausa" size={compact ? 38 : 42} onPress={onPause} disabled={!canAct} />
+        <IconButton icon="pause" label="Pausa" size={BANNER_BUTTON} onPress={onPause} disabled={!canAct} />
       </View>
       <View style={styles.bottom}>
         <View style={styles.category}>

@@ -1,12 +1,13 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { Linking } from 'react-native';
-import { AppText, Button, Card, Screen, SectionTitle, Toggle } from '../components/ui';
+import { Linking, StyleSheet, View } from 'react-native';
+import { Icon } from '../components/Icon';
+import { AppText, Button, Card, PressableScale, Row, Screen, SectionTitle, Segmented, Toggle } from '../components/ui';
 import { buildAlphabet } from '../data/alphabet';
 import { APP_VERSION, REPO_URL } from '../lib/appInfo';
 import { confirmAction } from '../lib/confirm';
-import { playSound } from '../lib/sound';
-import { colors } from '../lib/theme';
+import { playSound, setSoundPack, setSoundVolume, SOUND_PACKS, type SoundPackId, type SoundVolume } from '../lib/sound';
+import { colors, radius } from '../lib/theme';
 import { useAppStore } from '../store/AppStore';
 
 export default function SettingsScreen() {
@@ -27,7 +28,68 @@ export default function SettingsScreen() {
           }}
         />
         <Toggle icon="mobile" label="Vibración" hint="Al tocar letras, al fallar y en los últimos segundos." value={settings.haptics} onChange={(v) => updateSettings({ haptics: v })} />
+        {settings.sound ? (
+          <>
+            <Row label="Volumen" icon="volume" />
+            <Segmented
+              value={settings.soundVolume}
+              onChange={(v: SoundVolume) => {
+                updateSettings({ soundVolume: v });
+                setSoundVolume(v);
+                playSound('tap');
+              }}
+              options={[
+                { value: 'bajo', label: 'Bajo' },
+                { value: 'medio', label: 'Medio' },
+                { value: 'alto', label: 'Alto' },
+              ]}
+            />
+            <Toggle
+              icon="clock"
+              label="Tic-tac final"
+              hint="Suena en los últimos 3 segundos del turno."
+              value={settings.tickSound}
+              onChange={(v) => updateSettings({ tickSound: v })}
+            />
+          </>
+        ) : null}
       </Card>
+
+      {settings.sound ? (
+        <>
+          <SectionTitle icon="music">Estilo de sonido · toca para escucharlo</SectionTitle>
+          <View style={styles.packs}>
+            {SOUND_PACKS.map((p) => {
+              const active = settings.soundPack === p.id;
+              return (
+                <PressableScale
+                  key={p.id}
+                  containerStyle={styles.packCell}
+                  accessibilityLabel={`Estilo ${p.name}`}
+                  accessibilityState={{ selected: active }}
+                  onPress={() => {
+                    updateSettings({ soundPack: p.id as SoundPackId });
+                    setSoundPack(p.id);
+                    setTimeout(() => playSound('tap'), 80);
+                    setTimeout(() => playSound('golden'), 420);
+                  }}
+                  style={[styles.pack, active && styles.packActive]}
+                >
+                  <Icon name={active ? 'check' : p.icon} size={22} color={active ? colors.bgTop : colors.yellow} />
+                  <View style={{ flex: 1 }}>
+                    <AppText variant="bodyBold" color={active ? colors.bgTop : colors.text}>
+                      {p.name}
+                    </AppText>
+                    <AppText variant="caption" color={active ? colors.bgTop : colors.textDim}>
+                      {p.description}
+                    </AppText>
+                  </View>
+                </PressableScale>
+              );
+            })}
+          </View>
+        </>
+      ) : null}
 
       <SectionTitle icon="font">{`Abecedario (${alphabet.length} letras)`}</SectionTitle>
       <Card>
@@ -60,3 +122,19 @@ export default function SettingsScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  packs: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  packCell: { flexGrow: 1, flexBasis: 240 },
+  pack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: radius.md,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  packActive: { backgroundColor: colors.yellow, borderColor: colors.yellow },
+});

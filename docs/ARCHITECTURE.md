@@ -75,7 +75,7 @@ Para agregar una regla nueva: cambia el reducer, agrega una prueba en `engine.te
 
 - Clave `basta.state.v2` con `{ version, players, settings, history }`.
 - Al cargar se pasa por `sanitizeState`: cualquier dato corrupto se reemplaza por valores por defecto en vez de romper la app.
-- Si no existe la v2 pero sí los datos de la v1 (`basta.players.v1`), `migrateV1` los convierte (animal → avatar, victorias → estadísticas).
+- Si no existe pero sí el formato de datos anterior (`basta.players.v1`), `migrateV1` lo convierte (animal → avatar, victorias → estadísticas).
 - Los cambios se guardan con 250 ms de retraso para agrupar escrituras.
 - La app no dibuja ninguna pantalla hasta terminar de cargar (el splash sigue visible).
 
