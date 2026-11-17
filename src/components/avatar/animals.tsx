@@ -1,6 +1,10 @@
 import React from 'react';
-import Svg, { Circle, Ellipse, G, Path, Polygon, Rect } from 'react-native-svg';
+import { Circle, Ellipse, G, Path, Polygon, Rect } from 'react-native-svg';
 
+/**
+ * Animales dibujados a mano en SVG (viewBox 100×100), originales de este proyecto.
+ * Cada uno define `anchors`: puntos donde se colocan los accesorios.
+ */
 export type AnimalId =
   | 'gato'
   | 'perro'
@@ -54,10 +58,22 @@ function Smile({ y = 66, w = 5, color = INK }: { y?: number; w?: number; color?:
   );
 }
 
-type AnimalDef = { name: string; bg: string; draw: () => React.ReactElement };
+export type Anchors = {
+  /** Altura de los ojos y separación desde el centro. */
+  eyeY: number;
+  eyeDX: number;
+  /** Parte superior de la cabeza (donde se apoyan los sombreros). */
+  top: number;
+  mouthY: number;
+  /** Barbilla (donde van moños y bufandas). */
+  chinY: number;
+};
+
+export type AnimalDef = { name: string; bg: string; anchors: Anchors; draw: () => React.ReactElement };
 
 export const ANIMALS: Record<AnimalId, AnimalDef> = {
   gato: {
+    anchors: { eyeY: 53, eyeDX: 11, top: 25, mouthY: 67, chinY: 87 },
     name: 'Gato',
     bg: '#FFE0C2',
     draw: () => (
@@ -77,6 +93,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   perro: {
+    anchors: { eyeY: 48, eyeDX: 11, top: 24, mouthY: 67, chinY: 84 },
     name: 'Perro',
     bg: '#D6F0FF',
     draw: () => (
@@ -94,6 +111,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   zorro: {
+    anchors: { eyeY: 50, eyeDX: 13, top: 30, mouthY: 73, chinY: 86 },
     name: 'Zorro',
     bg: '#FFF1C9',
     draw: () => (
@@ -111,6 +129,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   panda: {
+    anchors: { eyeY: 51, eyeDX: 12, top: 23, mouthY: 69, chinY: 87 },
     name: 'Panda',
     bg: '#D9F7E8',
     draw: () => (
@@ -131,6 +150,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   leon: {
+    anchors: { eyeY: 50, eyeDX: 10, top: 20, mouthY: 66, chinY: 84 },
     name: 'León',
     bg: '#FFE7A3',
     draw: () => (
@@ -151,6 +171,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   rana: {
+    anchors: { eyeY: 35, eyeDX: 19, top: 22, mouthY: 70, chinY: 88 },
     name: 'Rana',
     bg: '#E2F9C9',
     draw: () => (
@@ -172,6 +193,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   buho: {
+    anchors: { eyeY: 46, eyeDX: 14, top: 22, mouthY: 60, chinY: 88 },
     name: 'Búho',
     bg: '#E8DDFF',
     draw: () => (
@@ -194,6 +216,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   cerdo: {
+    anchors: { eyeY: 48, eyeDX: 12, top: 25, mouthY: 76, chinY: 87 },
     name: 'Cerdo',
     bg: '#FFE3EC',
     draw: () => (
@@ -211,6 +234,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   oso: {
+    anchors: { eyeY: 49, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 },
     name: 'Oso',
     bg: '#FFE8D6',
     draw: () => (
@@ -229,6 +253,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   conejo: {
+    anchors: { eyeY: 56, eyeDX: 11, top: 30, mouthY: 72, chinY: 88 },
     name: 'Conejo',
     bg: '#DFF3FF',
     draw: () => (
@@ -247,6 +272,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   koala: {
+    anchors: { eyeY: 50, eyeDX: 12, top: 27, mouthY: 76, chinY: 85 },
     name: 'Koala',
     bg: '#E3F6F1',
     draw: () => (
@@ -264,6 +290,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   tigre: {
+    anchors: { eyeY: 50, eyeDX: 12, top: 22, mouthY: 68, chinY: 86 },
     name: 'Tigre',
     bg: '#FFF0D1',
     draw: () => (
@@ -282,6 +309,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   mono: {
+    anchors: { eyeY: 48, eyeDX: 10, top: 21, mouthY: 69, chinY: 83 },
     name: 'Mono',
     bg: '#FFE2CF',
     draw: () => (
@@ -302,6 +330,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   pinguino: {
+    anchors: { eyeY: 52, eyeDX: 11, top: 22, mouthY: 64, chinY: 88 },
     name: 'Pingüino',
     bg: '#D4ECFF',
     draw: () => (
@@ -315,6 +344,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   pollito: {
+    anchors: { eyeY: 50, eyeDX: 11, top: 25, mouthY: 63, chinY: 87 },
     name: 'Pollito',
     bg: '#FFF7D1',
     draw: () => (
@@ -331,6 +361,7 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
     ),
   },
   ajolote: {
+    anchors: { eyeY: 50, eyeDX: 15, top: 30, mouthY: 66, chinY: 82 },
     name: 'Ajolote',
     bg: '#FFE0EF',
     draw: () => (
@@ -360,16 +391,3 @@ export const ANIMALS: Record<AnimalId, AnimalDef> = {
 };
 
 export const ANIMAL_IDS = Object.keys(ANIMALS) as AnimalId[];
-
-type Props = { animal: AnimalId; size?: number; ring?: string; dimmed?: boolean };
-
-export function AnimalAvatar({ animal, size = 64, ring, dimmed }: Props) {
-  const def = ANIMALS[animal] ?? ANIMALS.gato;
-  return (
-    <Svg width={size} height={size} viewBox="0 0 100 100" opacity={dimmed ? 0.35 : 1}>
-      <Circle cx={50} cy={50} r={49} fill={def.bg} />
-      {def.draw()}
-      {ring ? <Circle cx={50} cy={50} r={47} fill="none" stroke={ring} strokeWidth={4} /> : null}
-    </Svg>
-  );
-}

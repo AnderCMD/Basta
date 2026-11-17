@@ -1,183 +1,245 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { AnimalAvatar } from '../components/AnimalAvatar';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, { LinearTransition, ZoomIn } from 'react-native-reanimated';
+import { Avatar } from '../components/avatar';
 import { Icon } from '../components/Icon';
-import { Card, GradientButton, Screen, SectionTitle, Stepper, Toggle } from '../components/ui';
-import type { GameMode } from '../lib/game';
-import { haptic } from '../lib/haptics';
-import { colors, gradients, radius, fonts } from '../lib/theme';
-import { useAppStore } from '../store/AppStore';
+import { AppText, Badge, Button, Card, Chip, EmptyState, PressableScale, Screen, SectionTitle, Stepper, Toggle } from '../components/ui';
+import { buildAlphabet } from '../data/alphabet';
+import { collectCategories } from '../data/categories';
+import type { GameMode } from '../features/game/engine';
+import { modeInfo, MODIFIERS } from '../features/game/modes';
+import { shuffle } from '../lib/random';
+import { gridColumns, useLayout } from '../lib/responsive';
+import { colors, radius, teamColors } from '../lib/theme';
+import { useAppStore, type PendingGame } from '../store/AppStore';
+import { LIVES_OPTIONS, MAX_PLAYERS, ROUND_OPTIONS, TIME_OPTIONS, WILDCARD_OPTIONS } from '../store/schema';
 
-const TIME_OPTIONS = [3, 5, 7, 10, 12, 15, 20, 30, 45, 60];
-const LIVES_OPTIONS = [1, 2, 3, 4, 5];
 
+const TEAM_NAMES = ['Rosa', 'Azul', 'Verde', 'Amarillo'];
+const MODES: GameMode[] = ['classic', 'tournament', 'points', 'teams'];
+
+/** Preparar partida: quién juega (y en qué orden), equipos y reglas. */
 export default function SetupScreen() {
   const params = useLocalSearchParams<{ mode?: string }>();
-  const mode: GameMode = params.mode === 'tournament' ? 'tournament' : 'quick';
+  const mode: GameMode = MODES.includes(params.mode as GameMode) ? (params.mode as GameMode) : 'classic';
+  const info = modeInfo(mode);
   const { players, settings, updateSettings, setPending, pending } = useAppStore();
+  const { contentWidth, s } = useLayout();
 
-  // Por defecto se seleccionan todos (o los de la última partida).
   const [selected, setSelected] = useState<string[]>(() => {
-    const prev = pending?.playerIds.filter((id) => players.some((p) => p.id === id));
-    return prev && prev.length >= 2 ? prev : players.map((p) => p.id);
+    const prev = pending?.competitors.flatMap((c) => c.memberIds).filter((id) => players.some((p) => p.id === id));
+    return (prev && prev.length >= 2 ? prev : players.map((p) => p.id)).slice(0, MAX_PLAYERS);
   });
-  // Si se agrega alguien desde aquí, entra seleccionado automáticamente.
+  const [teamCount, setTeamCount] = useState(2);
+  const [teamOf, setTeamOf] = useState<Record<string, number>>({});
+
+  // Jugadores nuevos (agregados desde aquí) entran seleccionados.
   const [knownIds, setKnownIds] = useState(() => players.map((p) => p.id));
   const currentIds = players.map((p) => p.id);
   if (currentIds.join('|') !== knownIds.join('|')) {
     const added = currentIds.filter((id) => !knownIds.includes(id));
     setKnownIds(currentIds);
-    setSelected((sel) => [...sel.filter((id) => currentIds.includes(id)), ...added]);
+    setSelected((sel) => [...sel.filter((id) => currentIds.includes(id)), ...added].slice(0, MAX_PLAYERS));
   }
 
-  const toggle = (id: string) => {
-    haptic.light();
-    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const ordered = selected.map((id) => players.find((p) => p.id === id)).filter((p): p is NonNullable<typeof p> => !!p);
+  const teamIndex = (id: string, i: number) => teamOf[id] ?? i % teamCount;
+  const teams = Array.from({ length: teamCount }, (_, t) => ordered.filter((p, i) => teamIndex(p.id, i) === t));
+
+  const categoriesCount = useMemo(() => collectCategories(settings.enabledPacks, settings.customCategories).length, [settings.enabledPacks, settings.customCategories]);
+  const lettersCount = buildAlphabet(settings).length;
+
+  const problems: string[] = [];
+  if (ordered.length < info.minPlayers) problems.push(`Este modo necesita al menos ${info.minPlayers} jugadores.`);
+  if (mode === 'teams' && teams.some((t) => t.length === 0)) problems.push('Cada equipo necesita al menos un integrante.');
+  if (mode !== 'points' && ordered.length < 2) problems.push('Selecciona al menos 2 jugadores.');
+  if (settings.useCategories && categoriesCount === 0) problems.push('Activa al menos un paquete de categorías.');
+
+  const toggle = (id: string) =>
+    setSelected((sel) => (sel.includes(id) ? sel.filter((x) => x !== id) : sel.length >= MAX_PLAYERS ? sel : [...sel, id]));
+
+  const cycleTeam = (id: string, i: number) => setTeamOf((t) => ({ ...t, [id]: (teamIndex(id, i) + 1) % teamCount }));
+
+  const shuffleTeams = () => {
+    const mixed = shuffle(ordered.map((p) => p.id));
+    setTeamOf(Object.fromEntries(mixed.map((id, i) => [id, i % teamCount])));
   };
 
-  // Mantener el orden de turnos en el orden en que se tocaron.
-  const ordered = selected.map((id) => players.find((p) => p.id === id)).filter(Boolean);
-  const canStart = ordered.length >= 2;
-
   const start = () => {
-    setPending({ mode, playerIds: selected });
+    const competitors: PendingGame['competitors'] =
+      mode === 'teams'
+        ? teams.map((members, t) => ({ id: `team-${t}`, name: TEAM_NAMES[t], color: teamColors[t], memberIds: members.map((m) => m.id) }))
+        : ordered.map((p, i) => ({ id: p.id, name: p.name, color: teamColors[i % teamColors.length], memberIds: [p.id] }));
+    setPending({ mode, competitors });
     router.push('/game');
   };
 
+  const cols = gridColumns(contentWidth, s(96), 10);
+  const cell = (contentWidth - (cols - 1) * 10) / cols;
+
   return (
-    <Screen title={mode === 'tournament' ? 'Torneo' : 'Partida rápida'}>
-      <Card style={{ backgroundColor: mode === 'tournament' ? 'rgba(255,210,63,0.12)' : 'rgba(255,77,141,0.12)' }}>
-        <Text style={styles.modeText}>
-          {mode === 'tournament'
-            ? 'Cada quien tiene vidas. Si se te acaba el tiempo o te equivocas pierdes una y empieza otra ronda con nueva categoría. Sin vidas, quedas fuera. ¡El último en pie es el campeón!'
-            : 'Una sola ronda: si se te acaba el tiempo o te equivocas, quedas fuera. El último en pie gana.'}
-        </Text>
+    <Screen
+      title={info.name}
+      footer={
+        <Button
+          size="lg"
+          icon="rocket"
+          label="¡A jugar!"
+          subtitle={problems[0] ?? `${ordered.length} jugadores · ${settings.turnSeconds}s por turno`}
+          tone={info.tone}
+          disabled={problems.length > 0}
+          onPress={start}
+        />
+      }
+    >
+      <Card tint="rgba(255,255,255,0.06)">
+        <View style={styles.modeRow}>
+          <Icon name={info.icon} size={26} color={colors.yellow} />
+          <AppText variant="body" style={{ flex: 1 }}>
+            {info.rules}
+          </AppText>
+        </View>
       </Card>
 
-      <SectionTitle>
-        ¿Quién juega? ({ordered.length}) · toca en orden de turno
+      <SectionTitle icon="users">
+        {`¿Quién juega? (${ordered.length}) · toca en orden de turno`}
       </SectionTitle>
-      {players.length < 2 ? (
-        <Card>
-          <Text style={styles.empty}>Necesitas al menos 2 jugadores registrados.</Text>
-          <GradientButton label="Agregar jugadores" icon="plus" colors={gradients.secondary} onPress={() => router.push('/players')} />
-        </Card>
+      {players.length === 0 ? (
+        <EmptyState icon="userPlus" title="Aún no hay jugadores" message="Crea jugadores con su animal para empezar.">
+          <Button icon="userPlus" label="Agregar jugadores" tone="secondary" onPress={() => router.push('/players')} />
+        </EmptyState>
       ) : (
         <View style={styles.grid}>
           {players.map((p) => {
             const idx = selected.indexOf(p.id);
             const on = idx >= 0;
             return (
-              <Pressable key={p.id} onPress={() => toggle(p.id)} style={[styles.chip, on && styles.chipOn]}>
-                <AnimalAvatar animal={p.animal} size={56} dimmed={!on} />
-                <Text style={[styles.chipName, !on && { color: colors.textFaint }]} numberOfLines={1}>
+              <PressableScale
+                key={p.id}
+                accessibilityLabel={`${p.name}${on ? `, turno ${idx + 1}` : ''}`}
+                accessibilityState={{ selected: on }}
+                onPress={() => toggle(p.id)}
+                style={[styles.chip, { width: cell }, on && styles.chipOn]}
+              >
+                <Avatar look={p.look} size={s(56)} dimmed={!on} />
+                <AppText variant="small" weight="heavy" numberOfLines={1} color={on ? colors.text : colors.textFaint}>
                   {p.name}
-                </Text>
+                </AppText>
                 {on ? (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{idx + 1}</Text>
-                  </View>
+                  <Animated.View entering={ZoomIn} style={styles.badge}>
+                    <Badge>{idx + 1}</Badge>
+                  </Animated.View>
                 ) : null}
-              </Pressable>
+              </PressableScale>
             );
           })}
-          <Pressable onPress={() => router.push('/players')} style={[styles.chip, styles.addChip]}>
-            <View style={styles.addCircle}>
+          <PressableScale accessibilityLabel="Agregar jugador" onPress={() => router.push('/players/edit')} style={[styles.chip, styles.addChip, { width: cell }]}>
+            <View style={[styles.addCircle, { width: s(56), height: s(56), borderRadius: s(28) }]}>
               <Icon name="plus" size={28} />
             </View>
-            <Text style={styles.chipName}>Agregar</Text>
-          </Pressable>
+            <AppText variant="small" weight="heavy">
+              Nuevo
+            </AppText>
+          </PressableScale>
         </View>
       )}
 
-      <SectionTitle>Reglas</SectionTitle>
+      {mode === 'teams' && ordered.length > 0 ? (
+        <>
+          <SectionTitle icon="peopleGroup">Equipos · toca a alguien para cambiarlo de equipo</SectionTitle>
+          <Card>
+            <Stepper label="Número de equipos" value={teamCount} options={[2, 3, 4] as const} onChange={setTeamCount} />
+            <Button icon="shuffle" label="Mezclar equipos al azar" tone="neutral" size="sm" onPress={shuffleTeams} />
+            {teams.map((members, t) => (
+              <Animated.View key={t} layout={LinearTransition} style={[styles.team, { borderColor: teamColors[t] }]}>
+                <AppText variant="bodyBold" color={teamColors[t]}>
+                  Equipo {TEAM_NAMES[t]} ({members.length})
+                </AppText>
+                <View style={styles.teamMembers}>
+                  {members.map((p) => (
+                    <PressableScale key={p.id} accessibilityLabel={`Mover a ${p.name}`} onPress={() => cycleTeam(p.id, ordered.indexOf(p))} style={styles.teamMember}>
+                      <Avatar look={p.look} size={40} ring={teamColors[t]} />
+                      <AppText variant="caption" numberOfLines={1}>
+                        {p.name}
+                      </AppText>
+                    </PressableScale>
+                  ))}
+                </View>
+              </Animated.View>
+            ))}
+          </Card>
+        </>
+      ) : null}
+
+      <SectionTitle icon="sliders">Reglas</SectionTitle>
       <Card>
-        <Stepper
-          label="Tiempo por turno"
-          value={settings.turnSeconds}
-          options={TIME_OPTIONS}
-          format={(v) => `${v}s`}
-          onChange={(v) => updateSettings({ turnSeconds: v })}
-        />
-        {mode === 'tournament' ? (
-          <Stepper
-            label="Vidas por jugador"
-            value={settings.lives}
-            options={LIVES_OPTIONS}
-            format={(v) => `${v} ${v === 1 ? 'vida' : 'vidas'}`}
-            onChange={(v) => updateSettings({ lives: v })}
-          />
+        <Stepper label="Tiempo por turno" icon="stopwatch" value={settings.turnSeconds} options={TIME_OPTIONS} format={(v) => `${v} s`} onChange={(v) => updateSettings({ turnSeconds: v })} />
+        {mode === 'tournament' || mode === 'teams' ? (
+          <Stepper label="Vidas" icon="heart" value={settings.lives} options={LIVES_OPTIONS} onChange={(v) => updateSettings({ lives: v })} />
         ) : null}
-        <Toggle
-          label="Usar categorías"
-          hint="Ej. “Frutas”: la palabra debe ser de esa categoría."
-          value={settings.useCategories}
-          onChange={(v) => updateSettings({ useCategories: v })}
-        />
-        <Toggle
-          label="Incluir CH y LL"
-          hint="Abecedario tradicional de 29 letras."
-          value={settings.includeDigraphs}
-          onChange={(v) => updateSettings({ includeDigraphs: v })}
-        />
-        <Toggle
-          label="Quitar letras difíciles"
-          hint="Sin K, Ñ, Q, W, X ni Y."
-          value={settings.excludeHard}
-          onChange={(v) => updateSettings({ excludeHard: v })}
+        {mode === 'points' ? (
+          <Stepper label="Rondas" icon="flag" value={settings.rounds} options={ROUND_OPTIONS} onChange={(v) => updateSettings({ rounds: v })} />
+        ) : null}
+        <Stepper
+          label="Comodines"
+          hint="Pasar turno o +5 s"
+          icon="magic"
+          value={settings.wildcards}
+          options={WILDCARD_OPTIONS}
+          onChange={(v) => updateSettings({ wildcards: v })}
         />
       </Card>
 
-      <GradientButton
-        size="lg"
-        icon="rocket"
-        label="¡A jugar!"
-        subtitle={canStart ? `${ordered.length} jugadores · ${settings.turnSeconds}s por turno` : 'Selecciona al menos 2 jugadores'}
-        colors={mode === 'tournament' ? gradients.gold : gradients.primary}
-        disabled={!canStart}
-        onPress={start}
-        style={{ marginTop: 8 }}
-      />
+      <SectionTitle icon="magic">Modificadores</SectionTitle>
+      <View style={styles.chips}>
+        {MODIFIERS.map((m) => (
+          <Chip
+            key={m.id}
+            icon={m.icon}
+            label={m.name}
+            selected={settings.modifiers[m.id]}
+            color={colors.yellow}
+            onPress={() => updateSettings({ modifiers: { ...settings.modifiers, [m.id]: !settings.modifiers[m.id] } })}
+          />
+        ))}
+      </View>
+
+      <SectionTitle icon="tags">Letras y categorías</SectionTitle>
+      <Card>
+        <Toggle
+          label="Usar categorías"
+          hint={settings.useCategories ? `${categoriesCount.toLocaleString('es-MX')} categorías activas` : 'Vale cualquier palabra'}
+          value={settings.useCategories}
+          onChange={(v) => updateSettings({ useCategories: v })}
+        />
+        <Button icon="tags" size="sm" tone="neutral" label="Elegir paquetes de categorías" onPress={() => router.push('/categories')} />
+        <Toggle label="Incluir CH y LL" hint="Abecedario tradicional" value={settings.includeDigraphs} onChange={(v) => updateSettings({ includeDigraphs: v })} />
+        <Toggle label="Quitar letras difíciles" hint={`K, Ñ, Q, W, X, Y · ${lettersCount} letras en juego`} value={settings.excludeHard} onChange={(v) => updateSettings({ excludeHard: v })} />
+      </Card>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  modeText: { color: colors.text, fontSize: 15, lineHeight: 22, fontFamily: fonts.semiBold },
-  empty: { color: colors.textDim, fontSize: 15, textAlign: 'center' },
+  modeRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   chip: {
-    width: 96,
     alignItems: 'center',
     gap: 6,
     paddingVertical: 12,
+    paddingHorizontal: 4,
     borderRadius: radius.md,
     backgroundColor: colors.card,
     borderWidth: 2,
     borderColor: 'transparent',
   },
   chipOn: { borderColor: colors.green, backgroundColor: 'rgba(46,230,166,0.12)' },
-  chipName: { color: colors.text, fontFamily: fonts.extraBold, fontSize: 14, maxWidth: 86 },
-  badge: {
-    position: 'absolute',
-    top: 6,
-    right: 8,
-    backgroundColor: colors.green,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeText: { color: '#0B3B2E', fontFamily: fonts.black, fontSize: 13 },
+  badge: { position: 'absolute', top: 6, right: 6 },
   addChip: { borderStyle: 'dashed', borderColor: colors.border },
-  addCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.cardStrong,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  addCircle: { backgroundColor: colors.cardStrong, alignItems: 'center', justifyContent: 'center' },
+  team: { borderWidth: 2, borderRadius: radius.md, padding: 10, gap: 8 },
+  teamMembers: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  teamMember: { alignItems: 'center', width: 64, gap: 2 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
 });

@@ -1,0 +1,9 @@
+# graphify: solo código, documentación y configuración
+node_modules/
+assets/
+docs/screenshots/
+docs/branding/
+graphify-out/
+.expo/
+dist/
+package-lock.json

@@ -2,19 +2,23 @@ import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 
 let enabled = true;
-export const setHapticsEnabled = (v: boolean) => {
-  enabled = v;
-};
 
-const run = (fn: () => Promise<void>) => {
+/** Activa o desactiva la vibración globalmente (se sincroniza con los ajustes). */
+export function setHapticsEnabled(value: boolean) {
+  enabled = value;
+}
+
+function run(fn: () => Promise<void>) {
   if (!enabled || Platform.OS === 'web') return;
   fn().catch(() => {});
-};
+}
 
+/** Patrones de vibración con significado en el juego. */
 export const haptic = {
+  select: () => run(() => Haptics.selectionAsync()),
   tap: () => run(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)),
-  light: () => run(() => Haptics.selectionAsync()),
+  heavy: () => run(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)),
   warn: () => run(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
   fail: () => run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)),
-  win: () => run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
+  success: () => run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
 };

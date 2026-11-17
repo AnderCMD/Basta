@@ -1,14 +1,19 @@
 # Basta — guía para agentes
 
-Juego de palabras "Basta" para Android/iOS (Expo SDK 58, React Native, TypeScript, Expo Router). Textos en español de México.
+Juego de palabras "Basta" para Android/iOS con un solo dispositivo al centro de la mesa. Expo SDK 58, React Native 0.88, TypeScript estricto, Expo Router, Reanimated 4. Textos en español de México.
 
-- Motor del juego: `src/lib/game.ts` (reducer puro; la aleatoriedad llega en las acciones). Pruebas en `src/lib/game.test.ts` con `npm test`.
-- Pantallas en `src/app/`, componentes en `src/components/`, estado persistente en `src/store/AppStore.tsx`.
-- Íconos: Font Awesome Free vía `src/components/Icon.tsx` (fuente en `assets/fonts`). Tipografía: Nunito (`fonts` en `src/lib/theme.ts`); usa `fontFamily: fonts.x`, no `fontWeight`.
+- Arquitectura completa: `docs/ARCHITECTURE.md`. Grafo de código: `graphify-out/`.
+- Motor puro en `src/features/game/engine.ts` (sin Math.random ni timers: la aleatoriedad llega en las acciones). Pruebas junto a cada módulo (`*.test.ts`, `npm test` con `node --import tsx --test`).
+- UI: usa siempre `src/components/ui` (AppText, Button, Card, Stepper…) y los tokens de `src/lib/theme.ts`. Tipografía por familia (`fonts.black`), nunca `fontWeight`. Íconos solo con `<Icon>` (Font Awesome 7), sin emojis.
+- Responsivo con `useLayout()` de `src/lib/responsive.ts`.
+- Datos persistidos: `src/store/schema.ts` (validación + migraciones). Si cambias la forma de los datos, sube `SCHEMA_VERSION` y agrega migración + prueba.
+- Animaciones con Reanimated: usa `.get()/.set()` en valores compartidos dentro de handlers (reglas de React Compiler).
+- Versión: solo en `package.json` (la lee `app.config.ts`).
 - Ramas: `main` (estable) y `dev` (desarrollo). Los PR van a `dev`.
-- Antes de terminar: `npm run typecheck && npm run lint && npm test`.
+- Antes de terminar: `npm run check`.
 
 ---
+
 
 This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
