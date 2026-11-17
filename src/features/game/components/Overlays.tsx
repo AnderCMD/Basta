@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSequence, withTiming, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import { Avatar, type AvatarLook } from '../../../components/avatar/Avatar';
 import { Confetti } from '../../../components/Confetti';
 import { Icon } from '../../../components/Icon';
@@ -90,7 +90,7 @@ export function PauseMenu({ state, onResume, onMistake, onKick, onUndo, onChange
 
   return (
     <Overlay>
-      <Animated.View entering={ZoomIn.springify()} style={{ alignItems: 'center' }}>
+      <Animated.View entering={FadeIn.duration(250)} style={{ alignItems: 'center' }}>
         <Icon name="pause" size={46} color={colors.yellow} />
       </Animated.View>
       <AppText variant="h1" align="center">
@@ -137,7 +137,7 @@ export function FailOverlay({ state, onNext, onUndo }: { state: GS; onNext: () =
 
   return (
     <Overlay>
-      <Animated.View entering={ZoomIn.springify()} style={{ alignItems: 'center' }}>
+      <Animated.View entering={FadeIn.duration(250)} style={{ alignItems: 'center' }}>
         <Icon name={icon} size={58} color={colors.red} />
       </Animated.View>
       <AppText variant="h1" align="center">
@@ -206,7 +206,7 @@ export function ResultsOverlay({ state, newAchievements, onRematch, onMenu, onUn
   return (
     <>
       <Overlay maxWidth={620}>
-        <Animated.View entering={ZoomIn.springify().damping(8)} style={{ alignItems: 'center', gap: 6 }}>
+        <Animated.View entering={FadeIn.duration(250)} style={{ alignItems: 'center', gap: 6 }}>
           <Icon name="crown" size={50} color={colors.yellow} />
           <AppText variant="label" color={colors.yellow}>
             {state.config.mode === 'teams' ? 'Equipo ganador' : state.config.mode === 'tournament' ? 'Campeón del torneo' : '¡Ganador!'}
@@ -228,7 +228,7 @@ export function ResultsOverlay({ state, newAchievements, onRematch, onMenu, onUn
 
         <Card>
           {ranked.map((c, i) => (
-            <Animated.View key={c.id} entering={FadeInDown.delay(150 + i * 80)} style={styles.rankRow}>
+            <Animated.View key={c.id} entering={FadeIn.delay(100 + i * 50).duration(250)} style={styles.rankRow}>
               <View style={[styles.medal, { backgroundColor: MEDAL_COLORS[i] ?? colors.cardStrong }]}>
                 <AppText weight="black" size={15} color={i < 3 ? colors.bgTop : colors.text}>
                   {i + 1}
@@ -254,7 +254,7 @@ export function ResultsOverlay({ state, newAchievements, onRematch, onMenu, onUn
               {awards.map((a, i) => {
                 const m = memberName(a.memberId);
                 return (
-                  <Animated.View key={a.id} entering={ZoomIn.delay(300 + i * 90).springify()} style={[styles.award, { width: s(140) }]}>
+                  <Animated.View key={a.id} entering={FadeIn.delay(300 + i * 90).duration(250)} style={[styles.award, { width: s(140) }]}>
                     <Icon name={a.icon} size={26} color={colors.yellow} />
                     <AppText variant="small" weight="black" align="center">
                       {a.title}
@@ -278,7 +278,7 @@ export function ResultsOverlay({ state, newAchievements, onRematch, onMenu, onUn
             {unlocked.map(({ playerId, achievement }, i) => {
               const m = memberName(playerId);
               return (
-                <Animated.View key={`${playerId}-${achievement!.id}`} entering={FadeInDown.delay(500 + i * 100)} style={styles.achievement}>
+                <Animated.View key={`${playerId}-${achievement!.id}`} entering={FadeIn.delay(300 + i * 60).duration(250)} style={styles.achievement}>
                   <View style={[styles.achIcon, { backgroundColor: TIER_COLORS[achievement!.tier] }]}>
                     <Icon name={achievement!.icon} size={20} color={colors.bgTop} />
                   </View>

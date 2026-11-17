@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y [SemVer](https://semver.org/lang/es/).
 
+## [1.0.2] - 2026-11-16
+
+### Corregido
+- Menús y pausas ya no rebotan: entran con un fundido suave y los botones no "brincan" al tocarlos.
+- Android: los botones ya no muestran un doble fondo gris (se quitó la sombra `elevation` que se dibujaba detrás del degradado).
+
 ## [1.0.1] - 2026-11-16
 
 ### Corregido

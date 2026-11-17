@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLayout } from '../../lib/responsive';
 import { AppText } from './AppText';
@@ -46,7 +46,7 @@ export function Screen({ title, children, right, footer, scroll = true }: Screen
         ) : null}
         {scroll ? (
           <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: s(40) }]} keyboardShouldPersistTaps="handled">
-            <Animated.View entering={FadeInDown.duration(350)} style={inner}>
+            <Animated.View entering={FadeIn.duration(250)} style={inner}>
               {children}
             </Animated.View>
           </ScrollView>

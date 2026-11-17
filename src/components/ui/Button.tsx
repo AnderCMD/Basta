@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.28,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
-    elevation: 5,
+    // Sin `elevation`: en Android la sombra se dibuja como un rectángulo gris
+    // detrás del degradado (doble fondo), sobre todo en tonos translúcidos.
     overflow: 'hidden',
   },
   iconBubble: { backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },

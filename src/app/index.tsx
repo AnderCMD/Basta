@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar, ANIMAL_IDS, defaultLook } from '../components/avatar';
 import { Logo } from '../components/Logo';
@@ -35,7 +35,7 @@ export default function Home() {
             <IconButton icon="gear" label="Ajustes" onPress={() => router.push('/settings')} />
           </View>
 
-          <Animated.View entering={FadeInDown.springify().damping(14)}>
+          <Animated.View entering={FadeIn.duration(300)}>
             <Logo size={s(isTablet ? 78 : 54)} />
           </Animated.View>
           <AppText variant="h3" align="center" color={colors.textDim}>
@@ -52,7 +52,7 @@ export default function Home() {
 
           <View style={[styles.menu, twoColumns && styles.menuGrid]}>
             {menu.map((item, i) => (
-              <Animated.View key={item.href} entering={FadeInDown.delay(200 + i * 70).springify().damping(15)} style={twoColumns ? styles.gridItem : undefined}>
+              <Animated.View key={item.href} entering={FadeIn.delay(150 + i * 40).duration(250)} style={twoColumns ? styles.gridItem : undefined}>
                 <Button size="lg" alignStart icon={item.icon} label={item.label} subtitle={item.subtitle} tone={item.tone} onPress={() => router.push(item.href)} />
               </Animated.View>
             ))}
