@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Image, Linking, StyleSheet, View } from 'react-native';
 import { Icon } from '../components/Icon';
 import { AppText, Button, Card, PressableScale, Row, Screen, SectionTitle, Segmented, Toggle } from '../components/ui';
 import { buildAlphabet } from '../data/alphabet';
-import { APP_VERSION, REPO_URL } from '../lib/appInfo';
+import { APP_VERSION, AUTHOR, REPO_URL } from '../lib/appInfo';
 import { confirmAction } from '../lib/confirm';
 import { playSound, setSoundPack, setSoundVolume, SOUND_PACKS, type SoundPackId, type SoundVolume } from '../lib/sound';
 import { colors, radius } from '../lib/theme';
@@ -117,8 +117,18 @@ export default function SettingsScreen() {
         <AppText variant="small" color={colors.textDim}>
           Proyecto de código abierto bajo licencia MIT. Íconos de Font Awesome Free (CC BY 4.0). Funciona sin internet, sin cuentas y sin anuncios.
         </AppText>
-        <Button icon="github" label="Ver el código en GitHub" tone="secondary" onPress={() => Linking.openURL(REPO_URL)} />
       </Card>
+      <Card style={styles.author}>
+        <AppText variant="label" color={colors.textDim}>
+          Hecho con cariño por
+        </AppText>
+        <Image source={AUTHOR.logo} style={styles.authorLogo} resizeMode="contain" accessibilityLabel={`Logotipo de ${AUTHOR.name}`} />
+        <AppText variant="small" color={colors.textDim} align="center">
+          {AUTHOR.role}
+        </AppText>
+      </Card>
+      <Button icon="earth" label={`Portafolio de ${AUTHOR.name}`} subtitle="andercmd.dev" tone="primary" onPress={() => Linking.openURL(AUTHOR.portfolio)} />
+      <Button icon="github" label="Ver el código en GitHub" subtitle="AnderCMD/Basta" tone="secondary" onPress={() => Linking.openURL(REPO_URL)} />
     </Screen>
   );
 }
@@ -127,6 +137,7 @@ const styles = StyleSheet.create({
   packs: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   packCell: { flexGrow: 1, flexBasis: 240 },
   pack: {
+    minHeight: 64,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -137,4 +148,6 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   packActive: { backgroundColor: colors.yellow, borderColor: colors.yellow },
+  author: { alignItems: 'center' },
+  authorLogo: { width: 220, height: 57 },
 });
