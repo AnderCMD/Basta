@@ -7,12 +7,16 @@ import { buildAlphabet } from '../data/alphabet';
 import { APP_VERSION, AUTHOR, REPO_URL } from '../lib/appInfo';
 import { confirmAction } from '../lib/confirm';
 import { playSound, setSoundPack, setSoundVolume, SOUND_PACKS, type SoundPackId, type SoundVolume } from '../lib/sound';
+import { useLayout } from '../lib/responsive';
 import { colors, radius } from '../lib/theme';
 import { useAppStore } from '../store/AppStore';
 
 export default function SettingsScreen() {
   const { settings, updateSettings, resetStats } = useAppStore();
   const alphabet = buildAlphabet(settings);
+  // Todas las tarjetas de estilo miden lo mismo, sin importar cuántas líneas ocupe su texto.
+  const { s } = useLayout();
+  const packHeight = s(88);
 
   return (
     <Screen title="Ajustes">
@@ -73,14 +77,14 @@ export default function SettingsScreen() {
                     setTimeout(() => playSound('tap'), 80);
                     setTimeout(() => playSound('golden'), 420);
                   }}
-                  style={[styles.pack, active && styles.packActive]}
+                  style={[styles.pack, { height: packHeight }, active && styles.packActive]}
                 >
                   <Icon name={active ? 'check' : p.icon} size={22} color={active ? colors.bgTop : colors.yellow} />
                   <View style={{ flex: 1 }}>
-                    <AppText variant="bodyBold" color={active ? colors.bgTop : colors.text}>
+                    <AppText variant="bodyBold" color={active ? colors.bgTop : colors.text} numberOfLines={1}>
                       {p.name}
                     </AppText>
-                    <AppText variant="caption" color={active ? colors.bgTop : colors.textDim}>
+                    <AppText variant="caption" color={active ? colors.bgTop : colors.textDim} numberOfLines={2}>
                       {p.description}
                     </AppText>
                   </View>
@@ -137,7 +141,6 @@ const styles = StyleSheet.create({
   packs: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   packCell: { flexGrow: 1, flexBasis: 240 },
   pack: {
-    minHeight: 64,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
