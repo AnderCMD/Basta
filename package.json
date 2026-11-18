@@ -49,7 +49,7 @@
   },
   "private": true,
   "description": "¡Basta! Juego de palabras para jugar en grupo con un solo teléfono o tableta en el centro de la mesa.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/AnderCMD/Basta.git"

@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Pon el teléfono o la tableta en el centro de la mesa y que empiece el juego.</b><br/>
-  Android · iOS · Expo SDK 58 + React Native 0.88 · TypeScript · Código abierto (MIT)
+  Android · iOS · Expo SDK 58 + React Native 0.88 · TypeScript · Código abierto (Apache 2.0)
 </p>
 
 <p align="center">
@@ -108,5 +108,5 @@ O localmente: `npx expo prebuild && cd android && ./gradlew assembleRelease`. De
 
 ## Licencia
 
-Código bajo licencia [MIT](LICENSE). Los avatares, sonidos e imágenes de marca son originales de este proyecto (misma licencia).
+Código bajo licencia [Apache 2.0](LICENSE). Los avatares, sonidos e imágenes de marca son originales de este proyecto (misma licencia).
 Recursos de terceros y sus licencias: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
