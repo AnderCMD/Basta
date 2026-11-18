@@ -119,7 +119,7 @@ export default function SettingsScreen() {
       <Card>
         <AppText variant="bodyBold">Basta v{APP_VERSION}</AppText>
         <AppText variant="small" color={colors.textDim}>
-          Proyecto de código abierto bajo licencia MIT. Íconos de Font Awesome Free (CC BY 4.0). Funciona sin internet, sin cuentas y sin anuncios.
+          Proyecto de código abierto bajo licencia Apache 2.0. Íconos de Font Awesome Free (CC BY 4.0). Funciona sin internet, sin cuentas y sin anuncios.
         </AppText>
       </Card>
       <Card style={styles.author}>
