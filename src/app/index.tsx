@@ -59,7 +59,7 @@ export default function Home() {
           </View>
 
           <AppText variant="caption" align="center" color={colors.textFaint}>
-            Basta v{APP_VERSION} · Código abierto · MIT
+            Basta v{APP_VERSION} · Código abierto · Apache 2.0
           </AppText>
         </ScrollView>
       </SafeAreaView>
